@@ -5,6 +5,8 @@
 #/ robert@chalmers.com.au
 #/ Twitter: @ShanghaiTimes
 #/ 29th November 2015
+#/ Modified 1st December 2005
+#/ Version 1 Beta
 #/ Sort a huge list of IP addresses, both IPv4 and IPv6
 #/ originally produced by Steve Jenkin's great work, 'postwhite'
 #/ See the comments sprinkled throughout...
