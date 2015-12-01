@@ -1,10 +1,15 @@
 #! /bin/bash
-#
+# 
+# Modified version of 
 # Postwhite - Automatic Postcreen Whitelist Generator
 #
 # By Steve Jenkins (http://stevejenkins.com/)
 	version="1.17"
 	lastupdated="30 Nov 2015"
+#
+# This version has a perlscript associated with it. perlsort.pl.
+# it is NOT ready for production platforms yet. 
+# DO NOT USE LIVE - Version 1.0 Beta
 #
 # Usage: place entire postwhite directory in /usr/local/bin then 
 # run ./postwhite
