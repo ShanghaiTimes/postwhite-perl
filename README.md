@@ -5,8 +5,10 @@ Perl is fast, and just about anyone doing any sort of System Admin will be famil
 Tue  1 Dec 2015 13:47:15 GMT
 
 Robert Chalmers
-robert@chalmers.com.au Coding and such like - pretty much OSX specific
-robert@chalmers.com.au  Quantum Radio: http://tinyurl.com/lwwddov
+robert@chalmers.com.au &  Quantum Radio: http://tinyurl.com/lwwddov
 Mac mini 6.2 - 2012, Intel Core i7,2.3 GHz, Memory:16 GB. El-Capitan 10.11. 2TB Storage made up of - 
 Drive 0:HGST HTS721010A9E630. Upper bay. Drive 1:ST1000LM024 HN-M101MBB. Lower Bay
+
+
+This set of scripts is in BETA. Things are commented out so it all works in the one directory where it's put.
 
