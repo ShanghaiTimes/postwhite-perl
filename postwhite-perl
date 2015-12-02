@@ -34,7 +34,7 @@ useperl=yes
 # Do this to invalid IPv4 addresses and CIDRs (remove / fix / keep)
 # WARNING: Setting this option to remove can dramatically increase the time Postwhite takes to
 # run if you have many mailers selected. Try it once, then come back and turn it off. :)
-invalidip4=keep
+invalidip4=remove
 
 # Simplify (remove) IP addresses from the whitelist that are already covered by CIDRs
 # WARNING: Enabling this option can dramatically increase the time Postwhite takes to
@@ -52,39 +52,39 @@ reloadpostfix=no
 # Choose "yes" or "no" to select from the following senders:
 
 # Webmail Providers
-aol=no
-google=no
-gmx=no
-inbox=no
-mac=no
-mail=no
-microsoft=no
+aol=yes
+google=yes
+gmx=yes
+inbox=yes
+mac=yes
+mail=yes
+microsoft=yes
 zoho=yes
 
 #Social Networks
-facebook=no
-instagram=no
-linkedin=no
-pinterest=no
-reddit=no
-tumblr=no
-twitter=no
+facebook=yes
+instagram=yes
+linkedin=yes
+pinterest=yes
+reddit=yes
+tumblr=yes
+twitter=yes
 
 # Ecommerce
 amazon=no
-craigslist=no
-ebay=no
-paypal=no
+craigslist=yes
+ebay=yes
+paypal=yes
 
 # Bulk Senders
-constantcontact=no
-exacttarget=no
-icontact=no
-mailchimp=no
-sendgrid=no
+constantcontact=yes
+exacttarget=yes
+icontact=yes
+mailchimp=yes
+sendgrid=yes
 
 # Misc
-zendesk=no
+zendesk=yes
 
 # NO NEED TO EDIT PAST THIS LINE
 
@@ -323,7 +323,7 @@ if [ "$invalidip4" == "fix" ] ; then
 		if [ -n "$ip" ] ; then
 			echo -ne "$ip\tpermit\n"
 		fi
-	done >> "${tmp3}" &
+	done >> "${tmp3}" 
 	show_dots $!
 
 # If enabled, remove invalid CIDRs
@@ -339,7 +339,7 @@ elif [ "$invalidip4" == "remove" ] ; then
 		elif [ "$iptype" == "ip6" ] ; then
 			echo -ne "$ip\tpermit\n"
 		fi
-	done >> "${tmp3}" &
+	done >> "${tmp3}" 
 	show_dots $!
 
 # If enabled, keep invalid CIDRs
@@ -368,8 +368,8 @@ echo -e "\ndoing perlsort.pl...\n"
 
 fi
 
-#echo -e "\nExit...\n"
-#exit
+echo -e "\nExit...\n"
+exit
 
 # Write whitelist to Postfix directory
 echo -e "Writing $numrules whitelist rules to ${postfixpath}/${whitelist}...\n"
