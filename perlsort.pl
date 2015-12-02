@@ -26,7 +26,7 @@ my ($src, $dest) = @ARGV;
 
 my $file = $ENV{TMP5};
 
-my $string = '\tpermit';
+my $string = "\tpermit";
 #my $filename = 'unsorted.txt';
 my $filename = $ENV{TMP3};
 
