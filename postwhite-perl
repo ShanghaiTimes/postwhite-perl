@@ -7,19 +7,25 @@
 #	Steve's version="1.17"
 #	lastupdated="30 Nov 2015"
 
-	version="Wed  2 Dec 2015 10:01:29 GMT"
+	version="1.20"
 	lastupdated="10:02:37 GMT"
-#
+# Location: https://github.com/ShanghaiTimes/postwhite-perl
+# By Robert Chalmers (http://chalmers.com.au)
+
 # This version has a perlscript associated with it. perlsort.pl.
 # it is NOT ready for production platforms yet. 
-# DO NOT USE LIVE - Version 1.0 Beta
+# DO NOT USE LIVE - Until you've checked everything with the Dodgey Bros.
+# 
+# Test Usage: unpack into a test directory and run ./postwhite-perl. Untill you uncomment
+# some lines at the end of the script - check it out - nothing will be put into the postfix directory
 #
-# Usage: place entire postwhite directory in /usr/local/bin then 
+# General Usage: place entire postwhite-perl directory in /usr/local/bin then 
 # run ./postwhite
 #
 # Requires spf-tools (https://github.com/jsarenik/spf-tools)
 # Please update your copy of spf-tools whenever you update Postwhite
 
+# Thanks to Steve Jenkins (http://stevejenkins.com/) for the original postwhite script used here.
 # Thanks to Mike Miller (mmiller@mgm51.com) for gwhitelist.sh script
 # Thanks to Jan Sarenik for SPF-Tools
 # Thanks to Jose Borges Ferreira for IPv4 normalization help
