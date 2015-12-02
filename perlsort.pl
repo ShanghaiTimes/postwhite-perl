@@ -5,8 +5,8 @@
 #/ robert@chalmers.com.au
 #/ Twitter: @ShanghaiTimes
 #/ 29th November 2015
-#/ Modified 1st December 2005
-#/ Version 1 Beta
+#/ Modified 2st December 2005
+#/ Version 1.1 
 #/ Sort a huge list of IP addresses, both IPv4 and IPv6
 #/ originally produced by Steve Jenkin's great work, 'postwhite'
 #/ See the comments sprinkled throughout...
@@ -24,11 +24,9 @@ my ($src, $dest) = @ARGV;
 #my $dir = dir("/tmp"); # /tmp
 #my $file = $dir->file("outfile.txt"); # /tmp/file.txt
 
-
 my $file = $ENV{TMP5};
 
-
-my $string = '     permit';
+my $string = '\tpermit';
 #my $filename = 'unsorted.txt';
 my $filename = $ENV{TMP3};
 
