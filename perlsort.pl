@@ -4,13 +4,13 @@
 #/ Robert Chalmers
 #/ robert@chalmers.com.au
 #/ Twitter: @ShanghaiTimes
-#/ 29th November 2015
-#/ Modified 2st December 2005
-#/ Version 1.1 
+#/ Wed  2 Dec 2015 10:18:08 GMT
+#/ Version 1.2 
 #/ Sort a huge list of IP addresses, both IPv4 and IPv6
 #/ originally produced by Steve Jenkin's great work, 'postwhite'
 #/ See the comments sprinkled throughout...
-
+#/- I've left a lot of commented lines in here. This started life as a work-in-progress.
+#/- 
 # Some CPAN includes - should be built into most
 use strict;
 use Path::Class;
@@ -38,7 +38,7 @@ my $filename = $ENV{TMP3};
 # Open the output file ready for writing.
 open(my $fh, '>', $file) or die "Could not open file '$file' $!";
 # Get a file_handle (IO::File object) you can write to
-#my $file_handle = $file->openw();
+# my $file_handle = $file->openw();
 
 # Open the input file. Store it's contents into @ip_strings
 open (FH, "< $filename") or die "Can't open $filename for read: $!";
