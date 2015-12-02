@@ -323,6 +323,7 @@ if [ "$invalidip4" == "fix" ] ; then
 		if [ -n "$ip" ] ; then
 			echo -ne "$ip\tpermit\n"
 		fi
+	#done >> "${tmp3}" &  # This & doesn't work in OSX
 	done >> "${tmp3}" 
 	show_dots $!
 
@@ -339,6 +340,7 @@ elif [ "$invalidip4" == "remove" ] ; then
 		elif [ "$iptype" == "ip6" ] ; then
 			echo -ne "$ip\tpermit\n"
 		fi
+	#done >> "${tmp3}" &  # This & doesn't work in OSX
 	done >> "${tmp3}" 
 	show_dots $!
 
