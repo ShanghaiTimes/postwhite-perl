@@ -34,7 +34,7 @@
 
 # spf-tools location (REQUIRED)
 spftoolspath=/usr/local/bin/spf-tools
-perlsortpath=/usr/local/bin/perlsort
+#perlsortpath=/usr/local/bin/perlsort
 
 # use Perl sort in favour of coretools sort yes/no
 useperl=yes
@@ -90,10 +90,13 @@ constantcontact=yes
 exacttarget=yes
 icontact=yes
 mailchimp=yes
+mailgun=yes
+mailjet=yes
 sendgrid=yes
 
 # Misc
 zendesk=yes
+github=yes
 
 # NO NEED TO EDIT PAST THIS LINE
 
