@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/opt/local/bin/perl -w
 
 #/ perlsort-1.pl
 #/ Robert Chalmers

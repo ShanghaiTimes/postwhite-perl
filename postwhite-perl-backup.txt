@@ -46,7 +46,6 @@
 # Thanks to Jose Borges Ferreira for IPv4 normalization help
 
 # USER-DEFINABLE OPTIONS
-# DONT FORGET to make sure you uncomment the sorted file output location, and the ./perlsort location
 
 # spf-tools location (REQUIRED)
 spftoolspath=/usr/local/bin/spf-tools
@@ -61,15 +60,12 @@ perlsortpath=/usr/local/bin/perlsort
 # Do this to invalid IPv4 addresses and CIDRs (remove / fix / keep)
 # WARNING: Setting this option to remove can dramatically increase the time Postwhite takes to
 # run if you have many mailers selected. Try it once, then come back and turn it off. :)
-
-invalidip4=keep
+invalidip4=remove
 
 # Simplify (remove) IP addresses from the whitelist that are already covered by CIDRs
 # WARNING: Enabling this option can dramatically increase the time Postwhite takes to
 # run if you have many mailers selected. Try it once, then come back and turn it off. :)
-
 simplify=no
-
 # Both defaults as shown here above, work ok with the list of mailers included. Just be aware though that if you change them, don't do so on a live systen
 
 # Paths
@@ -143,7 +139,7 @@ tmp5=$(mktemp -q /tmp/"${tmpBase}".XXXXXX)
 ip2int() {
     local a b c d
     { IFS=. read a b c d; } <<< $1
-    printf $(((((((a << 8) | b) << 8) | c) << 8) | d))
+    echo $(((((((a << 8) | b) << 8) | c) << 8) | d))
 }
 
 int2ip() {
@@ -153,33 +149,33 @@ int2ip() {
         ip=$((ui32 & 0xff))${ip:+.}$ip
         ui32=$((ui32 >> 8))
     done
-    printf $ip
+    echo $ip
 }
 
 network() {
-    local ia netmask;
-    { IFS="/" read ia netmask; } <<< $1
-    local addr=$(ip2int $ia);
+    local ip netmask;
+    { IFS="/" read ip netmask; } <<< $1
+    local addr=$(ip2int $ip);
     local mask=$((0xffffffff << (32 -$netmask)));
-    printf $(int2ip $((addr & mask)))/$netmask
+    echo $(int2ip $((addr & mask)))/$netmask
 }
 
 function normalize_ipv4() {
-        # split by ":"
-        local array=(${ip/:/ });
-        if [ "x${array[0]}" = "xip4" ] ; then
-                # check if is a CIDR
-                if [[ ${array[1]} == *"/"32 ]] ; then
-                        IP=${array[1]}
-                elif [[ ${array[1]} == *"/"* ]] ; then
-                        IP=$(network ${array[1]});
-                else
-                        IP=${array[1]}
-                fi
-        else
-                IP=${array[1]}
-        fi
-        printf "$IP"
+	# split by ":"
+	local array=(${ip/:/ });
+	if [ "x${array[0]}" = "xip4" ] ; then
+		# check if is a CIDR
+		if [[ ${array[1]} == *"/"32 ]] ; then
+			IP=${array[1]}
+		elif [[ ${array[1]} == *"/"* ]] ; then
+			IP=$(network ${array[1]});
+		else
+			IP=${array[1]}
+		fi
+	else
+		IP=${array[1]}
+	fi
+	echo "$IP"
 }
 
 # Create host query function
@@ -338,47 +334,50 @@ fi
 
 # If enabled, simplify (remove) any individual IPs already included in CIDR ranges (disabled by default)
 if [ "$simplify" == "yes" ]; then
-        printf "\nSimplifying IP addresses already included in CIDR ranges. These calculations\n"
-        printf "can take a LONG time if you have many mailers selected. Please be patient..."
-        cat "${tmp1}" | "${spftoolspath}"/simplify.sh > "${tmp2}" &
-        show_dots $!
-        printf "\nIP address simplification complete.\n"
+	echo -e ""
+	echo -e "Simplifying IP addresses already included in CIDR ranges. These calculations\n"
+	echo -n "can take a LONG time if you have many mailers selected. Please be patient..."
+	cat "${tmp1}" | "${spftoolspath}"/simplify.sh > "${tmp2}" &
+	show_dots $!
+	echo -e "\nIP address simplification complete."
 else
-        cat "${tmp1}" > "${tmp2}"
+	cat "${tmp1}" > "${tmp2}"
 fi
 
 # Check for invalid IPv4 CIDRs, then format the whitelist
 
 # If enabled, fix invalid CIDRs
 if [ "$invalidip4" == "fix" ] ; then
-	printf -n "Fixing invalid IPv4 CIDRs..."
+	echo -n "Fixing invalid IPv4 CIDRs..."
 	for ip in $(cat  "${tmp2}") ; do
 		ip=$(normalize_ipv4  "$ip");
 		if [ -n "$ip" ] ; then
-			printf "$ip\tpermit\n"
+			echo -ne "$ip\tpermit\n"
 		fi
 	#done >> "${tmp3}" &  # This & doesn't work in OSX
 	done >> "${tmp3}" 
 	show_dots $!
+
 # If enabled, remove invalid CIDRs
 elif [ "$invalidip4" == "remove" ] ; then
-        printf "\nRemoving invalid IPv4 CIDRs..."
-        for ip in $(cat "${tmp2}") ; do
-                iptype=$( printf "$ip" | cut -d\: -f1 )
-                origip=$( printf "$ip" | cut -d\: -f2 )
-                ip=$(normalize_ipv4 "$ip");
-                if [ "$origip" == "$ip" ] ; then
-                        printf "$ip\tpermit\n"
-                elif [ "$iptype" == "ip6" ] ; then
-                        printf "$ip\tpermit\n"
-                fi
-        done >> "${tmp3}" &
-        show_dots $!
+	echo -n "Removing invalid IPv4 CIDRs..."
+	for ip in $(cat "${tmp2}") ; do
+		iptype=$( echo "$ip" | cut -d\: -f1 )
+		origip=$( echo "$ip" | cut -d\: -f2 )
+		ip=$(normalize_ipv4 "$ip");
+		if [ "$origip" == "$ip" ] ; then
+			echo -ne "$ip\tpermit\n"
+		elif [ "$iptype" == "ip6" ] ; then
+			echo -ne "$ip\tpermit\n"
+		fi
+	#done >> "${tmp3}" &  # This & doesn't work in OSX
+	done >> "${tmp3}" 
+	show_dots $!
 
 # If enabled, keep invalid CIDRs
 elif [ "$invalidip4" == "keep" ] ; then
-        printf "\nKeeping invalid IPv4 CIDRs...\n"
-        printf "%s\n" | grep "^ip" "${tmp2}" | cut -c5- | sed s/$/'     permit'/ > "${tmp3}"
+	echo -e "\nKeeping invalid IPv4 CIDRs..."
+	printf "%s\n" | grep "^ip" "${tmp2}" | cut -c5- | sed s/$/'	permit'/ > "${tmp3}"
 fi
 
 export TMP3="${tmp3}"		#bash, ksh, zsh
@@ -392,12 +391,13 @@ if [ "$useperl" == "no" ] ; then
 echo -e "\nSorting whitelist rules...\n"
 sort -t. -k1,1n -k2,2n -k3,3n -k4,4n "${tmp3}" > "${tmp4}"
 uniq "${tmp4}" >> "${tmp5}"
+#numrules=$(cat "${tmp5}" | wc -l)
 
 elif [ "$useperl" != "no" ] ; then
 
 echo -e "\ndoing perlsort.pl...\n"
-#$perlsortpath/perlsort.pl
-./perlsort.pl
+$perlsortpath/perlsort.pl
+
 fi
 
 #ok - now grab the number of 'rules'
