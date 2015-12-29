@@ -1,18 +1,33 @@
 #! /bin/bash
 # 
-# Modified version of 
 # Postwhite - Automatic Postcreen Whitelist Generator
 #
 # By Steve Jenkins (http://stevejenkins.com/)
-#	Steve's version="1.17"
-#	lastupdated="30 Nov 2015"
+        version="1.23"
+        lastupdated="24 Dec 2015"
+#
+# Usage: place entire postwhite directory in /usr/local/bin then
+# run ./postwhite
+#
+# Requires SPF-Tools (https://github.com/jsarenik/spf-tools)
+# Please update your copy of spf-tools whenever you update Postwhite
+# despf.sh required >= 29 Nov 2015
+# simplify.sh required >= 07 Jul 2015
 
-	version="1.20"
-	lastupdated="10:02:37 GMT"
+# Thanks to Mike Miller (mmiller@mgm51.com) for gwhitelist.sh script
+# Thanks to Jan Sarenik for SPF-Tools
+# Thanks to Jose Borges Ferreira for IPv4 normalization help
+
+	version="1.25"
+	lastupdated="29 Dec 2015" 
 # Location: https://github.com/ShanghaiTimes/postwhite-perl
 # By Robert Chalmers (http://chalmers.com.au)
 
 # This version has a perlscript associated with it. perlsort.pl.
+# It produces this final output at the moment.
+# Writing      576 whitelist rules to postscreen_spf_whitelist.cidr...
+
+
 # it is NOT ready for production platforms yet. 
 # DO NOT USE LIVE - Until you've checked everything with the Dodgey Bros.
 # 
@@ -34,11 +49,13 @@
 
 # spf-tools location (REQUIRED)
 spftoolspath=/usr/local/bin/spf-tools
-#perlsortpath=/usr/local/bin/perlsort
 
-# use Perl sort in favour of coretools sort yes/no
+
+# use Perl sort in favour of coretools sort yes/no 
 useperl=yes
 
+# where I put the perlsort.pl routine. Move it from the downloaded source directory to /usr/local/bin or a directory of your choice, but make sure you update this.
+perlsortpath=/usr/local/bin/perlsort
 
 # Do this to invalid IPv4 addresses and CIDRs (remove / fix / keep)
 # WARNING: Setting this option to remove can dramatically increase the time Postwhite takes to
@@ -49,13 +66,15 @@ invalidip4=remove
 # WARNING: Enabling this option can dramatically increase the time Postwhite takes to
 # run if you have many mailers selected. Try it once, then come back and turn it off. :)
 simplify=no
+# Both defaults as shown here above, work ok with the list of mailers included. Just be aware though that if you change them, don't do so on a live systen
 
 # Paths
 postfixpath=/usr/local/etc/postfix
 postfixbinarypath=/usr/local/sbin
 whitelist=postscreen_spf_whitelist.cidr
 
-# Reload Postfix Automatically when done?
+
+# Reload Postfix Automatically when done? A good idea is yes. Leave no when testing...
 reloadpostfix=no
 
 # Choose "yes" or "no" to select from the following senders:
@@ -88,6 +107,7 @@ paypal=yes
 # Bulk Senders
 constantcontact=yes
 exacttarget=yes
+fishbowl=yes
 icontact=yes
 mailchimp=yes
 mailgun=yes
@@ -328,7 +348,6 @@ fi
 
 # If enabled, fix invalid CIDRs
 if [ "$invalidip4" == "fix" ] ; then
-	echo -e ""
 	echo -n "Fixing invalid IPv4 CIDRs..."
 	for ip in $(cat  "${tmp2}") ; do
 		ip=$(normalize_ipv4  "$ip");
@@ -341,7 +360,6 @@ if [ "$invalidip4" == "fix" ] ; then
 
 # If enabled, remove invalid CIDRs
 elif [ "$invalidip4" == "remove" ] ; then
-	echo -e ""
 	echo -n "Removing invalid IPv4 CIDRs..."
 	for ip in $(cat "${tmp2}") ; do
 		iptype=$( echo "$ip" | cut -d\: -f1 )
@@ -378,7 +396,7 @@ uniq "${tmp4}" >> "${tmp5}"
 elif [ "$useperl" != "no" ] ; then
 
 echo -e "\ndoing perlsort.pl...\n"
-./perlsort.pl
+$perlsortpath/perlsort.pl
 
 fi
 
@@ -387,8 +405,8 @@ numrules=$(cat "${tmp5}" | wc -l)
 
 #/- These last few lines will need alternatively uncommenting, and commenting. They allow the script to put the cidr file in 
 #/- THIS unpacked directory - NOT into the postfix directory as done with the operational script.
-#/- If yo decide to use this script, then need to make sure that this is modified.
-#/- You will of coure also need to modify the crontab line to reflect this name.
+#/- If you decide to use this script, then need to make sure that this is modified.
+#/- You will of course also need to modify the crontab line to reflect this name.
 
 # Write whitelist to Postfix directory
 #echo -e "Writing $numrules whitelist rules to ${postfixpath}/${whitelist}...\n"
